@@ -1,0 +1,33 @@
+source leaprc.protein.ff14SB
+source leaprc.water.tip3p
+source leaprc.gaff
+
+addAtomTypes {
+        {"ZN" "Zn" "sp3"}
+        
+}
+
+# Load parameters:
+
+loadamberparams zne6.frcmod
+loadoff CE6.lib
+loadoff HIZ.lib
+
+# Load pdb and bond iron to ligating histidine nitrogens:
+
+mol = loadpdb m4D2_Zne6_HIZ.pdb
+
+bond mol.36.NE2 mol.110.ZN
+bond mol.94.NE2 mol.110.ZN
+
+#Solvate, check charge, and save amber parameter+topology files:
+
+solvatebox mol TIP3PBOX 10
+charge mol
+addIons2 mol Na+ 0
+charge mol
+
+saveamberparm mol m4D2_Zne6.prmtop m4D2_Zne6.inpcrd
+savepdb mol m4D2_Zne6_MD.pdb
+
+quit
